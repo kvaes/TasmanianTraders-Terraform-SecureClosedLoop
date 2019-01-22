@@ -1,0 +1,35 @@
+name: $(Date:yyyyMMdd).$(Rev:.r)
+resources:
+  repositories:
+  - repository: vmsnoozer-infrastructure
+    type: git
+    name: vmsnoozer/vmsnoozer-infrastructure
+# trigger:
+#   batch: true
+#   branches:
+#     include:
+#     - master
+#   paths:
+#     include:
+#     - /terraform/
+#     - /_pipelines/templates/tf*
+jobs:
+- job: LandScaping_Build_Dev
+  variables:
+  - group: vmsnoozerdevsp
+  pool:
+    name: Default
+  steps:
+  - template: ../templates/tf-environment-build.yml
+    parameters:
+      varfile: dev.tfvars
+- job: LandScaping_Deploy_Dev
+  variables:
+  - group: vmsnoozerdevsp
+  dependsOn: LandScaping_Build_Dev
+  pool:
+    name: Default
+  steps:
+  - template: ../templates/tf-environment-deploy.yml
+    parameters:
+      varfile: dev.tfvars

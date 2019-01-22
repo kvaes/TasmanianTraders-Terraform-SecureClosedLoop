@@ -1,0 +1,10 @@
+steps:
+- script: terraform init -input=false
+  workingDirectory: $(Build.Repository.LocalPath)/terraform/environment
+  displayName: Terraform Init
+- script: terraform plan -input=false -var-file=${{ parameters.varfile }} -var 'armsubscriptionid=$(armsubscriptionid)' -var 'armtenantid=$(armtenantid)' -var 'armclientid=$(ARMCLIENTID)' -var 'armclientsecret=$(ARMCLIENTSECRET)' -var 'armobjectid=$(ARMOBJECTID)'
+  workingDirectory: $(Build.Repository.LocalPath)/terraform/environment
+  displayName: Terraform Plan
+- script: terraform apply -input=false -auto-approve -var-file=${{ parameters.varfile }} -var 'armsubscriptionid=$(armsubscriptionid)' -var 'armtenantid=$(armtenantid)' -var 'armclientid=$(ARMCLIENTID)' -var 'armclientsecret=$(ARMCLIENTSECRET)' -var 'armobjectid=$(ARMOBJECTID)'
+  workingDirectory: $(Build.Repository.LocalPath)/terraform/environment
+  displayName: Terraform Apply
